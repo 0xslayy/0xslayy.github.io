@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Orbitron:wght@600&display=swap');
+
+body {
+  background: #0e0e18 url('your-cyberpunk-bg.png') no-repeat center center fixed;
+  background-size: cover;
+  font-family: 'Orbitron', monospace;
+  color: #00ffff;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  max-width: 960px;
+  margin: auto;
+  padding: 2rem;
+  background: rgba(5, 5, 15, 0.85);
+  border-radius: 12px;
+  box-shadow: 0 0 10px #00ffff33;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #ff00ff;
+  margin-bottom: 0.5rem;
+}
+
+.meta {
+  font-size: 0.9rem;
+  color: #8888ff;
+}
+
+.alias {
+  color: #00ff99;
+}
+
+section {
+  margin-top: 2rem;
+}
+
+h2 {
+  color: #00ffff;
+  border-bottom: 1px solid #00ffff55;
+  padding-bottom: 0.3rem;
+  margin-bottom: 1rem;
+}
+
+pre {
+  background: #111122;
+  padding: 1rem;
+  overflow-x: auto;
+  border-left: 3px solid #00ffff;
+  color: #00ffcc;
+  border-radius: 5px;
+}
+
+ul {
+  list-style-type: square;
+  padding-left: 1.5rem;
+}
+
+.screenshot {
+  display: block;
+  width: 100%;
+  max-width: 800px;
+  margin: 1rem auto;
+  border: 2px solid #00ffff88;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00ffff55;
+}
+
+.image-info {
+  max-width: 800px;
+  margin: 0.5rem auto 2rem;
+  font-size: 0.9rem;
+  background: rgba(15, 15, 30, 0.8);
+  color: #00ffcc;
+  padding: 1rem;
+  border-left: 3px solid #00ffffaa;
+  border-radius: 6px;
+  box-shadow: 0 0 8px #00ffff33;
+  font-family: 'Orbitron', monospace;
+}
+
+footer {
+  margin-top: 3rem;
+  text-align: center;
+  font-size: 0.8rem;
+  color: #6666ff;
+}
+
+.ctf-section {
+  margin-top: 3rem;
+}
+
+.navbar {
+  background: rgba(5, 5, 20, 0.95);
+  display: flex;
+  justify-content: center;
+  padding: 1rem 0;
+  gap: 2rem;
+  border-bottom: 2px solid #00ffff55;
+  box-shadow: 0 0 10px #00ffff33;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.navbar a {
+  color: #00ffff;
+  text-decoration: none;
+  font-weight: bold;
+  font-family: 'Orbitron', monospace;
+  transition: 0.2s ease;
+}
+
+.navbar a:hover {
+  color: #ff00ff;
+  text-shadow: 0 0 5px #ff00ff88;
+}
+

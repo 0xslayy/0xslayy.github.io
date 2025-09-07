@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>CTF Writeup - Cyberpunk Style</title>
+  <link rel="stylesheet" href="/css/pages.css" />
+</head>
+<body>
+
+<nav class="navbar">
+  <a href="index.html">🏠 Home</a>
+  <a href="/pages/ctf.html">🎯 CTF Index</a>
+</nav>
+
+<div class="container">
+  <header>
+    <h1>⚔️ HackingHub - RemoteBinge</h1>
+    <p class="meta">🧠 Category: Web | 📁 Difficulty: Easy | 🧑‍💻 Solved by: <span class="alias">0xslayy</span></p>
+  </header>
+
+  <section class="ctf-section">
+    <h2>🧩 Challenge Brief</h2>
+    <div style="display: flex; justify-content: center;">
+      <iframe width="576" height="324" src="https://www.youtube.com/embed/oUI38IEqimM" title="This Hacker Scored $5,000 with a Remote Code Execution Exploit!" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+    </div>
+    <div class="image-info">
+      Follow along with the above video to exploit the web application. Once you can perform remote commands on the server, you'll be able to recover the contents of flag.txt in the root of the filesystem.
+      <br><br>
+      <strong>💡 Tip:</strong> It may be worth it to try and solve what you can and watch the video on parts you get stuck on.
+    </div>
+  </section>
+
+  <section class="ctf-section">
+    <h2>🧭 Recon</h2>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/Wappalyzer.png" alt="Wappalyzer" class="screenshot" />
+    <div class="image-info">
+      Using Wappalyzer, the first thing I see is that it is using Ubuntu as the operating system and Nginx as the web server, which is commonly used with PHP.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/EndPointer.png" alt="EndPointer" class="screenshot" />
+    <div class="image-info">
+      Also, using EndPointer, there don't seem to be many endpoints in the JavaScript. Not that we needed to do much reconnaissance right now, since we clearly have what appears to be a file upload vulnerability, which happens to be what I'm best at.
+    </div>
+  </section>
+
+    <section class="ctf-section">
+    <h2>⚡ Exploitation</h2>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/page-script_js.png" alt="Javascript file" class="screenshot" />
+    <div class="image-info">
+      We can take a look through the only Javascript file and see that there is zero client-side validation. There are limitations of client-side validation though since it is bypassable and users can disable JavaScript or manipulate the client-side code, allowing them to upload files that should be restricted. It does not provide any real security since it only acts as a first line of defense. We can generally assume there is some kind of server-side validation that needs to be bypassed. File size verification, content inspection, storage location(Storing files in a non-executable directory to prevent execution of uploaded scripts), and rechecking file types are all potential protections we need to bypass.
+      <br><br>
+      <strong>💡 Tip:</strong> See <a href="https://portswigger.net/web-security/file-upload">Portswigger</a> for more info
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/Only_gif_allowed.png" alt="we luv gifs" class="screenshot" />
+    <div class="image-info">
+      The site only allows for image GIF files. This is the part where we see what security mechanisms are in place so we can bypass them.
+      <br><br>
+      <strong>💡 Tip:</strong> When testing for file upload vulnerabilities, try using XSS payloads in file names to check if the application properly sanitizes inputs and prevents script execution.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/add_gif.png" alt="adding gif extension" class="screenshot" />
+    <div class="image-info">
+      There's no need to create polyglot files and overcomplicate things without starting simple. The first thing I did was check if the server-side validation worked by validating the file name. As you can see, I simply added a GIF extension to the name to see if it checked for keywords.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/mime_types.png" alt="adding mime types" class="screenshot" />
+    <div class="image-info">
+      The MIME type is used to describe the kind of file you are working with, so it naturally serves as a form of verification for your file type. That's why, of course, I tested for it, just as you would test for STDs.The MIME type is defined by the Content-Type header in HTTP requests and responses. This header indicates the media type of the resource being sent or received, allowing the client and server to understand how to process the data. For example, a JPEG image would have a Content-Type of image/jpeg, while a plain text file would have a Content-Type of text/plain.
+      <br><br>
+      <strong>💡 Tip:</strong> See <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/MIME_types/Common_types">MIME_types</a> for a cheatsheet.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/gif_submit.png" alt="magik" class="screenshot" />
+    <div class="image-info">
+      I was able to get the PHP file to submit as a GIF by changing the magic bytes.
+ <br><br>
+GIF89a: This is the version identifier for GIF files that conform to the GIF89a specification. It indicates that the file supports features like transparency and animation.
+ <br><br>
+GIF89: This is a shorthand reference to the GIF89a format, but it is less commonly used. It may not be recognized as a valid identifier in some contexts.
+ <br><br>
+47 49 46 38: These are the ASCII values for the characters "GIF8" in hexadecimal (47 = G, 49 = I, 46 = F, 38 = 8). This sequence is known as the "magic number" and is used to identify the file type as a GIF.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/GIF89a.png" alt="i hate my life" class="screenshot" />
+    <div class="image-info">
+      The site uses GIF89a, and I was able to confirm this by submitting a real GIF to the application.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/one_liner.png" alt="no way you are reading this" class="screenshot" />
+    <div class="image-info">
+      Now we can modify the test PHP body and add a PHP web shell one-liner to see what happens.
+      <pre><code>
+&lt;?php echo system(&#95;GET[&quot;cmd&quot;]); ?&gt;
+      </code></pre>
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/new_endpoint.png" alt="new endpoint" class="screenshot" />
+    <div class="image-info">
+      By submitting the request, we receive a new endpoint.
+    </div>
+    <img src="/images/Challenges/HackingHub/RemoteBinge/flag.png" alt="final command" class="screenshot" />
+    <div class="image-info">
+      Now we can simply use the query to get the web shell, and then URL-encode the payload to avoid any issues with spacing in our command.
+    </div>
+
+
+
+
+
+  </section>
+
+
+
+
+
+
+
+    <section class="ctf-section">
+      <h2>🏁 Final Flag</h2>
+      <pre><code>
+flag{Sorry_cuh_you_not_getting_it}
+      </code></pre>
+    </section>
+
+    <footer>
+      <p>~ Follow me on Instagram ~</p>
+    </footer>
+  </div>
+</body>
+</html>
+

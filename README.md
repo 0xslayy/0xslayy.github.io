@@ -1,3 +1,11 @@
 # 0xslayy.github.io
 
-This is where all the nerd stuff goes
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Mono&pause=1000&color=9A71F7&width=435&lines=Real+life+Cyberpunk)](https://git.io/typing-svg)
+
+![Cyberpunk chick](/images/girl.png)
+
+```
+>> Web Application Specialist
+>> Researcher in RFID/NFC and Implantable Devices
+>> Parkour
+```
